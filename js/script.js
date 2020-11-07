@@ -6,7 +6,7 @@ let player = {
     y: canvas.height / 4,
     width: 10,
     height: 10,
-    delta: 5,
+    delta: 1,
     color: "#000000"
 }
 let keys = {
@@ -33,30 +33,46 @@ document.addEventListener("keyup", (e) => {
 
 })
 function checkCollision(obj1, obj2) {
-    let xp = obj1.x + obj1.width > obj2.x;
-    let yb = obj1.y + obj1.height > obj2.y;
-    let yt = obj1.y < obj2.y + obj2.height;
-    let xl = obj1.x < obj2.x + obj2.width;
+    let xp = obj1.x + obj1.width >= obj2.x;
+    //let yb = obj1.y + obj1.height >= obj2.y;
+   // let yt = obj1.y <= obj2.y + obj2.height;
+let xl = obj1.x <= obj2.x + obj2.width;
+
+    let yt = obj1.y + obj1.height >= obj2.y;
+    let yb = obj1.y <= obj2.y + obj2.height;
     let collided = xp && yb && yt && xl;
-    const c=0;
+   // const c=0;
     if (collided) {
-        c++;
+//c++;
         player.color = "#00ff00";
-         if (xp && keys["ArrowRight"]) {
-          player.delta = 0;
-           
+//console.log("xp="+xp);
+       // console.log("xl="+xl);
+      console.log("yt="+yt);
+       console.log("yb="+yb);
+       if (obj1.x <= obj2.x) {
+           if(  keys["ArrowRight"] )player.delta = 0;
+           else player.delta = 3;
+           return;
         }
         
-        else   if (xl && keys["ArrowLeft"]) {
-           
-            player.delta = 0;
-            
+        if (obj1.x >= obj2.x ) {
+           if(keys["ArrowLeft"]) player.delta = 0;
+           else player.delta = 3;
+            return;
         }
-        else player.delta = 5;
+
+        if (obj1.y+obj1.height > obj2.y  ) {
+            if(keys["ArrowDown"]) player.delta = 0;
+            else player.delta = 3;
+             return;
+         }
       
+         if (obj1.y <= obj2.y+obj2.height ) {
+            if(keys["ArrowUp"]) player.delta = 0;
+            else player.delta = 3;
+             return;
+         }
       
-      //  
-        // if(xp) player.x=wall.x-player.width;
     }
     else {
         
@@ -67,6 +83,7 @@ function checkCollision(obj1, obj2) {
 //обновление
 function update() {
     checkCollision(player, wall);
+   // player.delta = 3;
     if (keys["ArrowRight"]) player.x += player.delta;
     if (keys["ArrowLeft"]) player.x -= player.delta;
     if (keys["ArrowDown"]) player.y += player.delta;
